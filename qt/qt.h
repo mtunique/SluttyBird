@@ -4,6 +4,7 @@
 #include <QtWidgets/QtWidgets>
 #include "ui_qt.h"
 #include <Box2D.h>
+#include <string>
 
 class QPainter;
 class QLabel;
@@ -45,6 +46,8 @@ public:
 	void setCirRight();	
 	void build();
 	void start();
+	void end();
+	std::string fileName;
 	
 	QMovie *movie;
 	QPixmap backgroundpic;

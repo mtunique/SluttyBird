@@ -9,7 +9,7 @@
 #include <qlabel.h>
 #include <qevent.h>
 #include <qnamespace.h>
-//#include <MyLabel.h>
+#include <MyLabel.h>
 
 qt::qt(QWidget *parent)
 	: QMainWindow(parent)
@@ -28,24 +28,20 @@ qt::qt(QWidget *parent)
 
 	backgroundpic.load("background.png");
 
-
+	fileName = "";
 	
-	//ÌùÄñ
-	
+	//ÌùÄñ	
 	cir = new QLabel(this);	
-	//cir->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 	cir->setStyleSheet("border:0px;");
-	movie = new QMovie("bird.gif");
+	movie = new QMovie("nobird.gif");
 	cir->setMovie(movie);
 	movie->start ();
-	cir->show();
-	//QPixmap *bird(tr("E:/unique/t/qt/2.png"))
-	//cir->setMovie(&bird);
 	cir->adjustSize();
-
-	//startButton = new MyLabel(this);
-	//connect(startButton, SIGNAL(clicked()),this, SLOT(startButtonClick()));
-	//startButton->setGeometry(pos.x*50,-pos.y*50,50,50);
+	//¿ªÊ¼
+	startButton = new MyLabel(this);
+	connect(startButton, SIGNAL(clicked()),this, SLOT(startButtonClick()));
+	startButton->setGeometry(375,275,50,50);
+	startButton->setStyleSheet("border:5px solid red;");
 }
 
 qt::~qt()
@@ -60,12 +56,29 @@ void qt::start()
 	movie = new QMovie("bird.gif");
 	cir->setMovie(movie);
 	movie->start ();
-	cir->show();
-	//QPixmap *bird(tr("E:/unique/t/qt/2.png"))
-	//cir->setMovie(&bird);
+	cir->show();	
 	cir->adjustSize();
-	//backgroundpic.load("backgroundstart.png");
-	//update();
+
+	backgroundpic.load("backgroundstart.png");
+	if(fileName == "a.txt")
+	{
+		end();
+		return;
+	}
+	fileName = "a.txt";
+	update();
+}
+
+void qt::end()
+{
+	movie = new QMovie("nobird.gif");
+	cir->setMovie(movie);
+	movie->start ();
+	cir->show();	
+	cir->adjustSize();
+
+	backgroundpic.load("backgroundend.png");	
+	update();
 }
 
 void qt::paintEvent(QPaintEvent *event)
@@ -82,7 +95,7 @@ void qt::paintEvent(QPaintEvent *event)
 	painter->drawPixmap(0,0,800,600,backgroundpic);
 	using namespace std;
 
-	fstream infile("a.txt");
+	fstream infile(fileName);
 	QPointF points[20000];
 	int num=0;
 	while(infile)
@@ -106,7 +119,6 @@ void qt::paintEvent(QPaintEvent *event)
 
 	//painter.drawPolygon(points, num);
 	infile.close();
-
 }
 
 void qt::build()
@@ -260,13 +272,23 @@ void qt::keyPressEvent(QKeyEvent *event)
 
 	}
 }
+
+
 void qt::startButtonClick()
 {
-	start();
+	start();	
 }
 
 
-/*
+
+
+
+
+
+
+
+
+
 MyLabel::MyLabel(QWidget * parent) : QLabel(parent) 
 {
 } 
@@ -274,4 +296,4 @@ void MyLabel::mouseReleaseEvent(QMouseEvent * ev)
 { 
 	Q_UNUSED(ev) 
 	emit clicked(); 
-}*/
+}
