@@ -16,10 +16,13 @@ public:
 	qt(QWidget *parent = 0);
 	~qt();
 	QPainter *painter;
+	float CH;
 
 private:
 	Ui::qtClass ui;
 	QLabel *cir;
+	QLabel *background;
+	QLabel *startButton;
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -34,7 +37,10 @@ private slots:
 public:	
 	void initBox2D();
 	QTimer *timer;
-	void setCirUp(int);	
+	void setCirUp();	
+	void setCirDown();	
+	void setCirLeft();	
+	void setCirRight();	
 	void build();
 
 
