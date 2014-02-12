@@ -126,6 +126,7 @@
     <ClInclude Include="Box2D\Box2D.h" />
     <ClInclude Include="bug.h" />
     <ClInclude Include="GeneratedFiles\ui_qt.h" />
+    <ClInclude Include="w.h" />
     <CustomBuild Include="mycontact.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </Message>

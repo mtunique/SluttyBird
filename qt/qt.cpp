@@ -12,7 +12,6 @@
 #include <MyLabel.h>
 #include <MyContact.h>
 
-
 qt::qt(QWidget *parent)
 	: QMainWindow(parent)
 {
@@ -75,7 +74,7 @@ void qt::end()
 	movie->start ();
 	cir->show();	
 	cir->adjustSize();
-
+	fileName = "noa.txt";
 	backgroundpic.load("backgroundend.png");	
 	update();
 }
@@ -168,7 +167,8 @@ void qt::initBox2D()
 	b2BodyDef bodyDef;
 	bodyDef.type = b2_dynamicBody;		
 	body =world ->CreateBody(&bodyDef);
-	
+	body->SetUserData(this);
+	body->SetBullet(true);
 
 	b2Vec2 point[4];
 			point[0].Set(0,0);
@@ -291,20 +291,22 @@ void MyLabel::mouseReleaseEvent(QMouseEvent * ev)
 }
 
 
-void MyContact::EndContact(b2Contact* contact)
+void MyContact::BeginContact(b2Contact* contact)
 {
 	b2Fixture* a = contact->GetFixtureA();
 	b2Fixture* b = contact->GetFixtureB();
 	b2Body *tmp = a->GetBody();
-	if(tmp =body)
+	if(tmp == body)
 	{
-		tmp = body;
+		qt *main = static_cast<qt*>(body->GetUserData());
+		main->end();
 	}
 
-	b2Body *tmp = b->GetBody();
-	if(tmp =body)
+	tmp = b->GetBody();
+	if(tmp == body)
 	{
-		tmp = body;
+		qt *main = static_cast<qt*>(body->GetUserData());
+		main->end();
 	}
 
 }

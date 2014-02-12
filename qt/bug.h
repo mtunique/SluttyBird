@@ -9,4 +9,5 @@ float32 timeStep;
 int32 velocity;
 int32 position;
 
-#endif 
+
+#endif BUG_H

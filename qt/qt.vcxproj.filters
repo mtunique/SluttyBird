@@ -84,5 +84,8 @@
     <ClInclude Include="bug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="w.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
