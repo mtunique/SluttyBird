@@ -35,8 +35,14 @@ qt::qt(QWidget *parent)
 	//¿ªÊ¼
 	startButton = new MyLabel(this);
 	connect(startButton, SIGNAL(clicked()),this, SLOT(startButtonClick()));
-	startButton->setGeometry(375,275,50,50);
-	startButton->setStyleSheet("border:5px solid red;");
+
+
+	movie = new QMovie("press-me.gif");
+	startButton->setMovie(movie);
+	movie->start ();		
+	startButton->setGeometry(275,410,0,0);
+	startButton->adjustSize();
+	startButton->setStyleSheet("border:0px solid red;");
 
 	started = 0;
 	loaded = 0;
@@ -51,7 +57,7 @@ void qt::start()
 	loaded = 1;
 	int ii=8;
 	//uploadAnalyzing(ii);
-	//imageRectAnalyzing(ii);
+	imageRectAnalyzing(ii);
 	cir = new QLabel(this);	
 	//cir->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 	cir->setStyleSheet("border:0px;");
@@ -59,23 +65,24 @@ void qt::start()
 	cir->setMovie(movie);
 	movie->start ();
 	cir->show();	
+	cir->setGeometry(50,250,50,50);
 	cir->adjustSize();
 
 	backgroundpic.load("backgroundstart");
-	/*if(fileName == "D:/pointdata_A.txt")
+	if(fileName == "D:/pointdata_A.txt")
 	{
 		end();
 		return;
 	}
 	fileName = "D:/pointdata_A.txt";
-	*/
-
+	
+/*
 	if(fileName == "a.txt")
 	{
 		end();
 		return;
 	}
-	fileName = "a.txt";
+	fileName = "a.txt";*/
 	this->initBox2D();		
 	update();
 }
@@ -364,14 +371,19 @@ void qt::keyPressEvent(QKeyEvent *event)
 
 void qt::load()
 {
-	
+	movie = new QMovie("nobird.gif");
+	startButton->setMovie(movie);
+	movie->start ();
+	startButton->show();	
+	startButton->adjustSize();
 	backgroundpic.load("backgroundzi.png");
 	update();
-
+	
 }
 
 void qt::startButtonClick()
 {
+	if (loaded == 0)
 	load();
 	
 }
