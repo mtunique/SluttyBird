@@ -10,21 +10,14 @@
 #include <qevent.h>
 #include <qnamespace.h>
 #include <MyLabel.h>
+#include <MyContact.h>
+
 
 qt::qt(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
 	this->setMaximumSize(800, 600);
-
-
-	timer = new QTimer(this);
-	connect(timer, SIGNAL(timeout()), this, SLOT(box2()));
-	timer->start(20);
-
-
-	this->initBox2D();
-
 
 	backgroundpic.load("background.png");
 
@@ -67,6 +60,12 @@ void qt::start()
 	}
 	fileName = "a.txt";
 	update();
+		
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(box2()));
+	timer->start(20);
+
+	this->initBox2D();
 }
 
 void qt::end()
@@ -161,6 +160,8 @@ void qt::initBox2D()
 {		
 	b2Vec2 gravity(0.0f, -10.0f);
 	world=new b2World(gravity);
+	listener = new MyContact();
+	world->SetContactListener(listener);
 
 	build();
 
@@ -280,15 +281,6 @@ void qt::startButtonClick()
 }
 
 
-
-
-
-
-
-
-
-
-
 MyLabel::MyLabel(QWidget * parent) : QLabel(parent) 
 {
 } 
@@ -296,4 +288,23 @@ void MyLabel::mouseReleaseEvent(QMouseEvent * ev)
 { 
 	Q_UNUSED(ev) 
 	emit clicked(); 
+}
+
+
+void MyContact::EndContact(b2Contact* contact)
+{
+	b2Fixture* a = contact->GetFixtureA();
+	b2Fixture* b = contact->GetFixtureB();
+	b2Body *tmp = a->GetBody();
+	if(tmp =body)
+	{
+		tmp = body;
+	}
+
+	b2Body *tmp = b->GetBody();
+	if(tmp =body)
+	{
+		tmp = body;
+	}
+
 }

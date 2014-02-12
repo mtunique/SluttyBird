@@ -9,6 +9,7 @@
 class QPainter;
 class QLabel;
 class MyLabel;
+class MyContact;
 
 class qt : public QMainWindow
 {
@@ -48,6 +49,7 @@ public:
 	void start();
 	void end();
 	std::string fileName;
+	MyContact *listener;
 	
 	QMovie *movie;
 	QPixmap backgroundpic;
