@@ -7,6 +7,7 @@
 
 class QPainter;
 class QLabel;
+class MyLabel;
 
 class qt : public QMainWindow
 {
@@ -22,7 +23,7 @@ private:
 	Ui::qtClass ui;
 	QLabel *cir;
 	QLabel *background;
-	QLabel *startButton;
+	MyLabel *startButton;
 
 protected:
     void paintEvent(QPaintEvent *);
@@ -33,6 +34,7 @@ protected:
 
 private slots:
 	void box2();
+	void startButtonClick();
 
 public:	
 	void initBox2D();
@@ -42,8 +44,13 @@ public:
 	void setCirLeft();	
 	void setCirRight();	
 	void build();
-
-
+	void start();
+	
+	QMovie *movie;
+	QPixmap backgroundpic;
 };
+
+
+
 
 #endif // QT_H

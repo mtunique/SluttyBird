@@ -1,5 +1,5 @@
 #include "qt.h"
-#include <QPainter>
+#include <qpainter>
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -9,6 +9,7 @@
 #include <qlabel.h>
 #include <qevent.h>
 #include <qnamespace.h>
+//#include <MyLabel.h>
 
 qt::qt(QWidget *parent)
 	: QMainWindow(parent)
@@ -21,19 +22,51 @@ qt::qt(QWidget *parent)
 	connect(timer, SIGNAL(timeout()), this, SLOT(box2()));
 	timer->start(20);
 
-	//ÌùÄñ
+
 	this->initBox2D();
+
+
+	backgroundpic.load("background.png");
+
+
+	
+	//ÌùÄñ
+	
 	cir = new QLabel(this);	
-	QPixmap pic(tr("2.png"));
-	cir->setPixmap(pic);
+	//cir->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+	cir->setStyleSheet("border:0px;");
+	movie = new QMovie("bird.gif");
+	cir->setMovie(movie);
+	movie->start ();
+	cir->show();
+	//QPixmap *bird(tr("E:/unique/t/qt/2.png"))
+	//cir->setMovie(&bird);
 	cir->adjustSize();
+
+	//startButton = new MyLabel(this);
+	//connect(startButton, SIGNAL(clicked()),this, SLOT(startButtonClick()));
+	//startButton->setGeometry(pos.x*50,-pos.y*50,50,50);
 }
 
 qt::~qt()
 {
 
 }
-
+void qt::start()
+{
+	cir = new QLabel(this);	
+	//cir->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+	cir->setStyleSheet("border:0px;");
+	movie = new QMovie("bird.gif");
+	cir->setMovie(movie);
+	movie->start ();
+	cir->show();
+	//QPixmap *bird(tr("E:/unique/t/qt/2.png"))
+	//cir->setMovie(&bird);
+	cir->adjustSize();
+	//backgroundpic.load("backgroundstart.png");
+	//update();
+}
 
 void qt::paintEvent(QPaintEvent *event)
 {
@@ -45,8 +78,8 @@ void qt::paintEvent(QPaintEvent *event)
     QBrush brush(QColor(0, 255, 0, 125)); 
     painter->setPen(pen); 
     painter->setBrush(brush); 
-    
-
+    	
+	painter->drawPixmap(0,0,800,600,backgroundpic);
 	using namespace std;
 
 	fstream infile("a.txt");
@@ -73,6 +106,7 @@ void qt::paintEvent(QPaintEvent *event)
 
 	//painter.drawPolygon(points, num);
 	infile.close();
+
 }
 
 void qt::build()
@@ -125,14 +159,14 @@ void qt::initBox2D()
 
 	b2Vec2 point[4];
 			point[0].Set(0,0);
-			point[1].Set(0,-1);
-			point[2].Set(1,-1);
-			point[3].Set(1,0);
+			point[1].Set(0,-1*0.6);
+			point[2].Set(1*0.8,-1*0.6);
+			point[3].Set(1*0.8,0);
 	b2PolygonShape dynamicBox;
 	dynamicBox.Set(point, 4);
 	b2FixtureDef fixtureDef;
 	fixtureDef.shape = &dynamicBox;
-	fixtureDef.density = 20.0f;
+	fixtureDef.density = 30.0f;
 	fixtureDef.friction = 0.3f;
 	body->CreateFixture(&fixtureDef);
 	body->SetTransform( b2Vec2( 1, -5 ), 0 );	
@@ -226,3 +260,18 @@ void qt::keyPressEvent(QKeyEvent *event)
 
 	}
 }
+void qt::startButtonClick()
+{
+	start();
+}
+
+
+/*
+MyLabel::MyLabel(QWidget * parent) : QLabel(parent) 
+{
+} 
+void MyLabel::mouseReleaseEvent(QMouseEvent * ev) 
+{ 
+	Q_UNUSED(ev) 
+	emit clicked(); 
+}*/
