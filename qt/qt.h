@@ -48,9 +48,11 @@ public:
 	void build();
 	void start();
 	void end();
+	void startTime();
+	void load();
 	std::string fileName;
 	MyContact *listener;
-	
+	int started, loaded;
 	QMovie *movie;
 	QPixmap backgroundpic;
 };

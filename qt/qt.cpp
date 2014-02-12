@@ -11,6 +11,9 @@
 #include <qnamespace.h>
 #include <MyLabel.h>
 #include <MyContact.h>
+#include "DLL_SAMPLE.h"
+#include <strstream>
+#pragma comment(lib,"DLLTEST.lib")
 
 qt::qt(QWidget *parent)
 	: QMainWindow(parent)
@@ -34,6 +37,9 @@ qt::qt(QWidget *parent)
 	connect(startButton, SIGNAL(clicked()),this, SLOT(startButtonClick()));
 	startButton->setGeometry(375,275,50,50);
 	startButton->setStyleSheet("border:5px solid red;");
+
+	started = 0;
+	loaded = 0;
 }
 
 qt::~qt()
@@ -42,6 +48,10 @@ qt::~qt()
 }
 void qt::start()
 {
+	loaded = 1;
+	int ii=8;
+	//uploadAnalyzing(ii);
+	//imageRectAnalyzing(ii);
 	cir = new QLabel(this);	
 	//cir->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 	cir->setStyleSheet("border:0px;");
@@ -51,20 +61,31 @@ void qt::start()
 	cir->show();	
 	cir->adjustSize();
 
-	backgroundpic.load("backgroundstart.png");
+	backgroundpic.load("backgroundstart");
+	/*if(fileName == "D:/pointdata_A.txt")
+	{
+		end();
+		return;
+	}
+	fileName = "D:/pointdata_A.txt";
+	*/
+
 	if(fileName == "a.txt")
 	{
 		end();
 		return;
 	}
 	fileName = "a.txt";
+	this->initBox2D();		
 	update();
-		
+}
+
+void qt::startTime()
+{
 	timer = new QTimer(this);
 	connect(timer, SIGNAL(timeout()), this, SLOT(box2()));
 	timer->start(20);
-
-	this->initBox2D();
+	started = 1;
 }
 
 void qt::end()
@@ -98,18 +119,18 @@ void qt::paintEvent(QPaintEvent *event)
 	int num=0;
 	while(infile)
 	{
-		int x,y;
-		char c1,c2,c3;
-		string line;
-		getline(infile, line);
-		if(line[0]=='*') 
+		float x,y;
+		string line;		
+		if(num==4) 
 		{
 			painter->drawPolygon(points, num);
+			getline(infile, line);
 			num = 0;
 			continue;
 		}
-		x = atoi(line.substr(0,line.find(" ")).c_str());//get x		
-		y = atoi(line.substr(line.find(" ")+1).c_str());//get y		
+		getline(infile, line);
+		istringstream ss(line);
+		ss>>x>>y;	
 		points[num].setX(x);
 		points[num].setY(y);
 		++num;
@@ -123,16 +144,17 @@ void qt::build()
 {
 	using namespace std;
 
-	fstream infile("a.txt");
+	fstream infile(fileName);
 
 	b2Vec2 vertices[20000];
 	int num=0;
+
 	while(infile)
 	{
-		int x,y;
+		float x,y;
 		string line;
-		getline(infile, line);
-		if(line[0]=='*') 
+		
+		if(num==4) 
 		{
 			b2PolygonShape polyShape;
 			polyShape.Set(vertices,  num);
@@ -142,13 +164,13 @@ void qt::build()
 			polyDef.position.Set(0,0);
 			b2Body *poly = world->CreateBody(&polyDef);
 			poly->CreateFixture(&polyFixDef);
-
+			getline(infile, line);
 			num = 0;
 			continue;
 		}
-		x = atoi(line.substr(0,line.find(" ")).c_str());
-		//outfile<<x;
-		y = atoi(line.substr(line.find(" ")+1).c_str());
+		getline(infile, line);
+		istringstream ss(line);
+		ss>>x>>y;
 		vertices[num].Set(x/50, -y/50);
 		++num;
 	}
@@ -170,7 +192,7 @@ void qt::initBox2D()
 	body->SetUserData(this);
 	body->SetBullet(true);
 
-	b2Vec2 point[4];
+	b2Vec2  point[4];
 			point[0].Set(0,0);
 			point[1].Set(0,-1*0.6);
 			point[2].Set(1*0.8,-1*0.6);
@@ -231,10 +253,13 @@ void qt::initBox2D()
 
 void qt::box2()
 {
+	if (started)
+	{
 	world->Step(timeStep, velocity, position);
 	b2Vec2 pos = body->GetPosition();	
 	cir->setGeometry(pos.x*50,-pos.y*50,50,50);
 	cir->adjustSize();
+	}
 }
 
 void qt::setCirUp()
@@ -259,25 +284,96 @@ void qt::keyPressEvent(QKeyEvent *event)
 	switch (event->key())
 	{
 		case Qt::Key_Up:
-			setCirUp();
+			{
+				if(loaded)
+				{
+					if(started)
+					{
+					setCirUp();
+					}
+					else
+					{
+					startTime();
+					}
+				}
+				else
+				{
+					start();
+				}
+			}
 			break;
 		case Qt::Key_Down:
-			setCirDown();
+			{
+				if(loaded)
+				{
+					if(started)
+					{
+					setCirDown();
+					}
+					else
+					{
+					startTime();
+					}
+				}
+				else
+				{
+					start();
+				}
+			}
 			break;
 		case Qt::Key_Left:
-			setCirLeft();
+			{
+				if(loaded)
+				{
+					if(started)
+					{
+					setCirLeft();
+					}
+					else
+					{
+					startTime();
+					}
+				}
+				else
+				{
+					start();
+				}
+			}
 			break;
 		case Qt::Key_Right:
-			setCirRight();
+			{
+				if(loaded)
+				{
+					if(started)
+					{
+					setCirRight();
+					}
+					else
+					{
+					startTime();
+					}
+				}
+				else
+				{
+					start();
+				}
+			};
 			break;
-
 	}
 }
 
+void qt::load()
+{
+	
+	backgroundpic.load("backgroundzi.png");
+	update();
+
+}
 
 void qt::startButtonClick()
 {
-	start();	
+	load();
+	
 }
 
 
