@@ -7,6 +7,7 @@ using namespace cv;
 #define MAX_OUTLINES 30
 #define SUCCESS 0
 #define FAILURE 1
+#define OUTLINE_OVERFLOW 2
 
 
 extern "C" _declspec(dllexport) void processEdges(Mat src, Mat &edgesMat, vector<vector<Point>> &contours_out, bool isSmooth = true, int thresh = 50);

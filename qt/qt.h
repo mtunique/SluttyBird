@@ -50,9 +50,10 @@ public:
 	void end();
 	void startTime();
 	void load();
+	void replay();
 	std::string fileName;
 	MyContact *listener;
-	int started, loaded;
+	int started, loaded,success;
 	QMovie *movie;
 	QPixmap backgroundpic;
 };

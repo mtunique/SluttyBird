@@ -1,4 +1,4 @@
-﻿生成启动时间为 2014/2/13 5:20:18。
+﻿生成启动时间为 2014/2/13 16:00:29。
      1>项目“E:\unique\qt\qt\qt.vcxproj”在节点 2 上(Build 个目标)。
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 11.0\VC\bin\CL.exe /c /I.\GeneratedFiles /I. /ID:\Qt\Qt5.2.0\5.2.0\msvc2012\include /I.\GeneratedFiles\Debug /ID:\Qt\Qt5.2.0\5.2.0\msvc2012\include\QtCore /ID:\Qt\Qt5.2.0\5.2.0\msvc2012\include\QtGui /ID:\Qt\Qt5.2.0\5.2.0\msvc2012\include\QtOpenGL /ID:\Qt\Qt5.2.0\5.2.0\msvc2012\include\QtWidgets /Zi /nologo /W1 /WX- /Od /Oy- /D UNICODE /D WIN32 /D WIN64 /D QT_DLL /D QT_CORE_LIB /D QT_GUI_LIB /D QT_OPENGL_LIB /D QT_WIDGETS_LIB /Gm- /EHsc /MDd /GS /fp:precise /Zc:wchar_t- /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc110.pdb" /Gd /TP /analyze- /errorReport:prompt qt.cpp
@@ -9,10 +9,9 @@
          Debug\qrc_qt.obj
          Debug\main.obj
          Debug\qt.obj
-     1>Box2D.lib(b2EdgeShape.obj) : warning LNK4075: 忽略“/EDITANDCONTINUE”(由于“/SAFESEH”规范)
          qt.vcxproj -> E:\unique\qt\Win32\Debug\qt.exe
      1>已完成生成项目“E:\unique\qt\qt\qt.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:06.96
+已用时间 00:00:12.18

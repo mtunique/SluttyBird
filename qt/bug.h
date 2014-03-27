@@ -3,6 +3,7 @@
 
 int a;
 b2Body *body;
+b2Body *endedge;
 b2World *world;
 
 float32 timeStep;

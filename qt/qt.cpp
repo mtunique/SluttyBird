@@ -14,13 +14,13 @@
 #include "DLL_SAMPLE.h"
 #include <strstream>
 #pragma comment(lib,"DLLTEST.lib")
-
+//初始化窗体
 qt::qt(QWidget *parent)
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
 	this->setMaximumSize(800, 600);
-
+	success = 0;
 	backgroundpic.load("background.png");
 
 	fileName = "";
@@ -52,12 +52,13 @@ qt::~qt()
 {
 
 }
+//开始游戏
 void qt::start()
 {
 	loaded = 1;
 	int ii=8;
 	//uploadAnalyzing(ii);
-	imageRectAnalyzing(ii);
+	int now = imageRectAnalyzing(ii);
 	cir = new QLabel(this);	
 	//cir->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 	cir->setStyleSheet("border:0px;");
@@ -86,7 +87,7 @@ void qt::start()
 	this->initBox2D();		
 	update();
 }
-
+//开始计时器
 void qt::startTime()
 {
 	timer = new QTimer(this);
@@ -94,7 +95,7 @@ void qt::startTime()
 	timer->start(20);
 	started = 1;
 }
-
+//结束游戏
 void qt::end()
 {
 	movie = new QMovie("nobird.gif");
@@ -104,17 +105,22 @@ void qt::end()
 	cir->adjustSize();
 	fileName = "noa.txt";
 	backgroundpic.load("backgroundend.png");	
+	movie = new QMovie("replay.gif");
+	startButton->setMovie(movie);
+	movie->start ();		
+	startButton->setGeometry(275,410,0,0);
+	startButton->adjustSize();
 	update();
 }
-
+//绘图
 void qt::paintEvent(QPaintEvent *event)
 {
 	painter = new QPainter(this);
     QPixmap pix;
     
 	QPen pen; 
-    pen.setColor(QColor(255, 0, 0));
-    QBrush brush(QColor(0, 255, 0, 125)); 
+    pen.setColor(QColor(220, 220, 220));
+    QBrush brush(QColor(210, 210, 210, 125)); 
     painter->setPen(pen); 
     painter->setBrush(brush); 
     	
@@ -146,7 +152,7 @@ void qt::paintEvent(QPaintEvent *event)
 	//painter.drawPolygon(points, num);
 	infile.close();
 }
-
+//建立矩形
 void qt::build()
 {
 	using namespace std;
@@ -183,7 +189,7 @@ void qt::build()
 	}
 	infile.close();
 }
-
+//建立物理引擎
 void qt::initBox2D()
 {		
 	b2Vec2 gravity(0.0f, -10.0f);
@@ -212,8 +218,9 @@ void qt::initBox2D()
 	fixtureDef.friction = 0.3f;
 	body->CreateFixture(&fixtureDef);
 	body->SetTransform( b2Vec2( 1, -5 ), 0 );	
-	body->SetFixedRotation(true);
-	body->SetGravityScale(2.5);
+	body->SetFixedRotation(true);	
+	if (body->GetGravityScale()!=2.5)
+		body->SetGravityScale(2.5);
 
 		b2BodyDef myBodyDef;
 		myBodyDef.type = b2_dynamicBody;
@@ -247,7 +254,8 @@ void qt::initBox2D()
 		v1.Set(800/50,-600/50);
 		v2.Set(800/50,0);
 		edge.Set( v1, v2 );
-		world->CreateBody(&myBodyDef)->CreateFixture(&myFixtureDef);
+		endedge = world->CreateBody(&myBodyDef);
+		endedge->CreateFixture(&myFixtureDef);
 		v1.Set(0,0);
 		v2.Set(800/50,0);
 		edge.Set( v1, v2 );
@@ -257,21 +265,28 @@ void qt::initBox2D()
 	velocity = 6;
 	position = 4;
 }
-
+//移动物体
 void qt::box2()
 {
 	if (started)
 	{
 	world->Step(timeStep, velocity, position);
-	b2Vec2 pos = body->GetPosition();	
+	b2Vec2 pos = body->GetPosition();
+	if (success)
+		return;
+	if (pos.x>16-0.88) 
+	{
+		success = 1;
+		return;
+	}
 	cir->setGeometry(pos.x*50,-pos.y*50,50,50);
 	cir->adjustSize();
 	}
 }
-
+//对物体加冲量
 void qt::setCirUp()
 {
-	body->ApplyLinearImpulse( b2Vec2(0,250), body->GetWorldCenter());
+	body->ApplyLinearImpulse( b2Vec2(0,100), body->GetWorldCenter());
 }
 void qt::setCirRight()
 {
@@ -279,13 +294,13 @@ void qt::setCirRight()
 }
 void qt::setCirDown()
 {
-	body->ApplyLinearImpulse( b2Vec2(0,-200), body->GetWorldCenter());
+	body->ApplyLinearImpulse( b2Vec2(0,-60), body->GetWorldCenter());
 }
 void qt::setCirLeft()
 {
 	body->ApplyLinearImpulse( b2Vec2(-30,0), body->GetWorldCenter());
 }
-
+//重载键盘
 void qt::keyPressEvent(QKeyEvent *event)
 {
 	switch (event->key())
@@ -368,7 +383,7 @@ void qt::keyPressEvent(QKeyEvent *event)
 			break;
 	}
 }
-
+//加载游戏
 void qt::load()
 {
 	movie = new QMovie("nobird.gif");
@@ -380,15 +395,45 @@ void qt::load()
 	update();
 	
 }
+//重玩
+void qt::replay()
+{
+	backgroundpic.load("backgroundstart");
+	fileName = "D:/pointdata_A.txt";
 
+	this->initBox2D();	
+
+	movie = new QMovie("no-me.gif");
+	startButton->setMovie(movie);
+	movie->start ();		
+	startButton->setGeometry(275,410,0,0);
+	startButton->adjustSize();
+
+	movie = new QMovie("bird.gif");
+	cir->setMovie(movie);
+	movie->start ();
+	cir->show();	
+	cir->setGeometry(50,250,50,50);
+	cir->adjustSize();
+
+	
+	//initBox2D();
+	update();
+	started = 0;
+}
+//重载类
 void qt::startButtonClick()
 {
 	if (loaded == 0)
 	load();
-	
+	else
+	{
+		replay();
+		body->SetGravityScale(0.5);
+	}
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
+//自定义label类
 MyLabel::MyLabel(QWidget * parent) : QLabel(parent) 
 {
 } 
@@ -397,24 +442,34 @@ void MyLabel::mouseReleaseEvent(QMouseEvent * ev)
 	Q_UNUSED(ev) 
 	emit clicked(); 
 }
-
-
+////////////////////////////////////////////////////////////////////////////////////
+//自定义物理接触类
 void MyContact::BeginContact(b2Contact* contact)
 {
 	b2Fixture* a = contact->GetFixtureA();
 	b2Fixture* b = contact->GetFixtureB();
 	b2Body *tmp = a->GetBody();
+	b2Body *tmp2 = b->GetBody();
+	qt *main = static_cast<qt*>(body->GetUserData());
+	if(main->success) return;
 	if(tmp == body)
 	{
+		if  (tmp2!=endedge)
+		{
 		qt *main = static_cast<qt*>(body->GetUserData());
 		main->end();
+		}
 	}
-
-	tmp = b->GetBody();
-	if(tmp == body)
+	else
 	{
+	if(tmp2 == body)
+	{
+		if  (tmp!=endedge)
+		{
 		qt *main = static_cast<qt*>(body->GetUserData());
 		main->end();
+		}
+	} 
 	}
 
 }
